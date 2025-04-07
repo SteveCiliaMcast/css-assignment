@@ -1,65 +1,58 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AppointmentService } from '../../services/appointment.service';
+import { Appointment } from '../../dto/appointment.dto';
+
 
 @Component({
   selector: 'app-edit-appointment',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './edit-appointment.component.html',
-  styleUrls: ['./edit-appointment.component.css']
+  styleUrl: './edit-appointment.component.css'
 })
 export class EditAppointmentComponent implements OnInit {
-  editForm: FormGroup;
-  appointmentId: number;
+  form!: FormGroup;
+  appointmentId!: number;
 
   constructor(
     private fb: FormBuilder,
-    private appointmentService: AppointmentService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.editForm = this.fb.group({
-      patientName: ['', Validators.required],
-      animalType: ['', Validators.required],
-      ownerIdCardNumber: ['', Validators.required],
-      ownerName: ['', Validators.required],
-      ownerSurname: ['', Validators.required],
-      ownerContactNumber: ['', Validators.required],
-      appointmentDate: ['', Validators.required],
-      appointmentTime: ['', Validators.required],
-      appointmentDuration: [0, Validators.required],
-      reasonForAppointment: ['', Validators.required],
-      vetNotes: ['']
-    });
-    this.appointmentId = 0;
-  }
+    private router: Router,
+    private appointmentService: AppointmentService
+  ) {}
 
   ngOnInit(): void {
-    // Get the appointment ID from the route
-    this.appointmentId = Number(this.route.snapshot.paramMap.get('id'));
+    this.appointmentId = +this.route.snapshot.paramMap.get('id')!;
+    this.loadAppointment();
+  }
 
-    // Fetch the appointment details
-    this.appointmentService.getAppointmentById(this.appointmentId.toString()).subscribe(
-      (data) => {
-        this.editForm.patchValue(data); // Populate the form with the fetched data
-      },
-      (error) => {
-        console.error('Error fetching appointment:', error);
-      }
-    );
+  loadAppointment(): void {
+    this.appointmentService.getAppointmentById(this.appointmentId).subscribe((appointment: Appointment) => {
+      this.form = this.fb.group({
+        animalType: [appointment.animalType, Validators.required],
+        appointmentDate: [appointment.appointmentDate, Validators.required],
+        appointmentDuration: [appointment.appointmentDuration, [Validators.required, Validators.min(1)]],
+        appointmentTime: [appointment.appointmentTime, Validators.required],
+        ownerContactNumber: [appointment.ownerContactNumber, Validators.required],
+        ownerIdCardNumber: [appointment.ownerIdCardNumber, Validators.required],
+        ownerName: [appointment.ownerName, Validators.required],
+        ownerSurname: [appointment.ownerSurname, Validators.required],
+        patientName: [appointment.patientName, Validators.required],
+        reasonForAppointment: [appointment.reasonForAppointment, Validators.required],
+        vetNotes: [appointment.vetNotes || '']
+      });
+    });
   }
 
   onSubmit(): void {
-    if (this.editForm.valid) {
-      this.appointmentService.updateAppointment(this.appointmentId.toString(), this.editForm.value).subscribe(
-        () => {
-          console.log('Appointment updated successfully');
-          this.router.navigate(['/view-appointment']); // Navigate back to the appointments list
-        },
-        (error) => {
-          console.error('Error updating appointment:', error);
-        }
-      );
+    if (this.form.valid) {
+      this.appointmentService.updateAppointment(this.appointmentId, this.form.value).subscribe(() => {
+        alert('Appointment updated successfully.');
+        this.router.navigate(['/view-appointment']);
+      });
     }
   }
 }

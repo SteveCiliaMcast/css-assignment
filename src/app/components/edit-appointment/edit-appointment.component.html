@@ -1,0 +1,60 @@
+<h2>Edit Appointment</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
+  <div class="form-group">
+    <label>Patient Name</label>
+    <input formControlName="patientName" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Animal Type</label>
+    <input formControlName="animalType" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Owner Name</label>
+    <input formControlName="ownerName" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Owner Surname</label>
+    <input formControlName="ownerSurname" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Owner Contact Number</label>
+    <input formControlName="ownerContactNumber" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Owner ID Card Number</label>
+    <input formControlName="ownerIdCardNumber" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Appointment Date</label>
+    <input formControlName="appointmentDate" type="date" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Appointment Time</label>
+    <input formControlName="appointmentTime" type="time" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Appointment Duration (minutes)</label>
+    <input formControlName="appointmentDuration" type="number" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>Reason for Appointment</label>
+    <textarea formControlName="reasonForAppointment" class="form-control"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Vet Notes</label>
+    <textarea formControlName="vetNotes" class="form-control"></textarea>
+  </div>
+
+  <button class="btn btn-success" type="submit" [disabled]="form.invalid">Update Appointment</button>
+</form>

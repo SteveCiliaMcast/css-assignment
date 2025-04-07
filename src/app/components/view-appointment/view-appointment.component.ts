@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentService } from '../../services/appointment.service';
+import { Appointment } from '../../dto/appointment.dto';
 
 @Component({
   selector: 'app-view-appointment',
@@ -11,7 +12,7 @@ import { AppointmentService } from '../../services/appointment.service';
   styleUrl: './view-appointment.component.css'
 })
 export class ViewAppointmentComponent implements OnInit {
-  appointments: any[] = [];
+  appointments: Appointment[] = [];
 
   constructor(
     private appointmentService: AppointmentService,
@@ -20,8 +21,7 @@ export class ViewAppointmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.appointmentService.getAppointments().subscribe(
-      (data: any[]) => {
-        console.log('API Response:', data); // Log the API response
+      (data: Appointment[]) => {
         this.appointments = data;
       },
       (error) => {
@@ -29,6 +29,7 @@ export class ViewAppointmentComponent implements OnInit {
       }
     );
   }
+  
 
   // Navigate to view appointment details
   viewAppointment(appointmentId: number): void {
