@@ -1,0 +1,42 @@
+<h2>Appointments</h2>
+
+<table class="table table-striped" *ngIf="appointments.length > 0; else noAppointments">
+  <thead>
+    <tr>
+      <th>Appointment ID</th>
+      <th>Owner Name</th>
+      <th>Owner Surname</th>
+      <th>Contact Number</th>
+      <th>Animal Type</th>
+      <th>Patient Name</th>
+      <th>Appointment Date</th>
+      <th>Appointment Time</th>
+      <th>Reason</th>
+      <th>Vet Notes</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let appt of appointments">
+      <td>{{ appt.appointmentId }}</td>
+      <td>{{ appt.ownerName }}</td>
+      <td>{{ appt.ownerSurname }}</td>
+      <td>{{ appt.ownerContactNumber }}</td>
+      <td>{{ appt.animalType }}</td>
+      <td>{{ appt.patientName }}</td>
+      <td>{{ appt.appointmentDate }}</td>
+      <td>{{ appt.appointmentTime }}</td>
+      <td>{{ appt.reasonForAppointment }}</td>
+      <td>{{ appt.vetNotes }}</td>
+      <td>
+        <button class="btn btn-primary btn-sm" (click)="viewAppointment(appt.appointmentId)">View</button>
+        <button class="btn btn-warning btn-sm" (click)="updateAppointment(appt.appointmentId)">Update</button>
+        <button class="btn btn-danger btn-sm" (click)="deleteAppointment(appt.appointmentId)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noAppointments>
+  <p>No appointments found.</p>
+</ng-template>
