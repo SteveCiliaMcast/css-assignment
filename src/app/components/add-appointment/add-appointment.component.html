@@ -13,14 +13,21 @@
       </div>
   
       <!-- Animal Type -->
-      <div class="form-group">
-        <label for="animalType">Animal Type</label>
-        <input id="animalType" formControlName="animalType" class="form-control" required />
-        @if (appointmentForm.get('animalType')?.touched && appointmentForm.get('animalType')?.invalid) {
-          <div class="text-danger">
-            Animal Type is required.
-          </div>
-        }
+        <div class="form-group">
+            <label for="animalType">Animal Type</label>
+            <select id="animalType" formControlName="animalType" class="form-control" required>
+            <option value="" disabled>Select Animal Type</option>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Rabbit">Rabbit</option>
+            <option value="Bird">Bird</option>
+            <option value="Reptile">Reptile</option>
+            </select>
+            @if (appointmentForm.get('animalType')?.touched && appointmentForm.get('animalType')?.invalid) {
+            <div class="text-danger">
+                Animal Type is required.
+            </div>
+            }
       </div>
   
       <!-- Owner ID Card Number -->
@@ -90,13 +97,19 @@
       </div>
 
   
-      <!-- Appointment Duration -->
-      <div class="form-group">
-        <label for="appointmentDuration">Appointment Duration (minutes)</label>
-        <input id="appointmentDuration" type="number" formControlName="appointmentDuration" class="form-control" required />
+
+    <!-- Appointment Duration -->
+    <div class="form-group">
+        <label for="appointmentDuration">Appointment Duration</label>
+        <select id="appointmentDuration" formControlName="appointmentDuration" class="form-control" required>
+          <option value="" disabled>Select Duration</option>
+          <option value="10">10 mins</option>
+          <option value="15">15 mins</option>
+          <option value="30">30 mins</option>
+        </select>
         @if (appointmentForm.get('appointmentDuration')?.touched && appointmentForm.get('appointmentDuration')?.invalid) {
           <div class="text-danger">
-            Appointment Duration is required and must be a valid number.
+            Appointment Duration is required.
           </div>
         }
       </div>

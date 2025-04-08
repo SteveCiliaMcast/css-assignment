@@ -38,7 +38,7 @@ export class AddAppointmentComponent implements OnInit {
       appointmentTime: ['', [Validators.required, this.timeNotInPastValidator]],
       appointmentDuration: ['', [Validators.required, Validators.min(1)]],
       reasonForAppointment: ['', Validators.required],
-      vetNotes: ['']
+      vetNotes: ['', Validators.required]
     });
   }
 
