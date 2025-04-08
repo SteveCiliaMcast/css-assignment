@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../dto/appointment.dto';
-import * as XLSX from 'xlsx';
+import * as ExcelJS from 'exceljs';
+import * as FileSaver from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AppointmentStatusPipe } from "../../pipes/appointment-status.pipe";
@@ -13,7 +14,7 @@ import { AppointmentStatusPipe } from "../../pipes/appointment-status.pipe";
   standalone: true,
   imports: [CommonModule, AppointmentStatusPipe],
   templateUrl: './list-appointments.component.html',
-  styleUrl: './list-appointments.component.css'
+  styleUrls: ['./list-appointments.component.css']
 })
 export class ListAppointmentsComponent implements OnInit {
   appointments: Appointment[] = [];
@@ -63,40 +64,53 @@ export class ListAppointmentsComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    const worksheetData = this.appointments.map(appt => ({
-      'ID': appt.appointmentId,
-      'Patient': appt.patientName,
-      'Animal': appt.animalType,
-      'Owner': `${appt.ownerName} ${appt.ownerSurname}`,
-      'Contact': appt.ownerContactNumber,
-      'Date': appt.appointmentDate,
-      'Time': appt.appointmentTime,
-      'Reason': appt.reasonForAppointment,
-      'Status': this.getStatus(appt.appointmentDate, appt.appointmentTime)
-    }));
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Appointments');
 
-    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    worksheet.columns = [
+      { header: 'ID', key: 'id', width: 10 },
+      { header: 'Patient', key: 'patient', width: 20 },
+      { header: 'Animal', key: 'animal', width: 15 },
+      { header: 'Owner', key: 'owner', width: 25 },
+      { header: 'Contact', key: 'contact', width: 20 },
+      { header: 'Date', key: 'date', width: 15 },
+      { header: 'Time', key: 'time', width: 10 },
+      { header: 'Reason', key: 'reason', width: 30 },
+      { header: 'Status', key: 'status', width: 12 }
+    ];
 
-    // Apply background color for "Upcoming" appointments
-    this.appointments.forEach((appt, index) => {
+    this.appointments.forEach(appt => {
       const status = this.getStatus(appt.appointmentDate, appt.appointmentTime);
+      const row = worksheet.addRow({
+        id: appt.appointmentId,
+        patient: appt.patientName,
+        animal: appt.animalType,
+        owner: `${appt.ownerName} ${appt.ownerSurname}`,
+        contact: appt.ownerContactNumber,
+        date: appt.appointmentDate,
+        time: appt.appointmentTime,
+        reason: appt.reasonForAppointment,
+        status: status
+      });
+
       if (status === 'Upcoming') {
-        const rowIndex = index + 2; // +2 because Excel rows start at 1, and the first row is the header
-        const cellAddress = `H${rowIndex}`; // Assuming "Status" is in column H
-        if (!worksheet[cellAddress]) {
-          worksheet[cellAddress] = { t: 's', v: status }; // Ensure the cell exists
-        }
-        worksheet[cellAddress].s = {
-          fill: {
-            fgColor: { rgb: '00FF00' } // Green background
-          }
-        };
+        row.eachCell(cell => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'C6EFCE' } // Light green
+          };
+        });
       }
     });
 
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Appointments');
-    XLSX.writeFile(workbook, 'Appointments.xlsx');
+    workbook.xlsx.writeBuffer().then(data => {
+      const blob = new Blob([data], {
+        type:
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+      FileSaver.saveAs(blob, 'Appointments.xlsx');
+    });
   }
 
   exportToPDF(): void {
