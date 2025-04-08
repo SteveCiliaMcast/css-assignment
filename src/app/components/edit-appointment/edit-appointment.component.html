@@ -1,60 +1,115 @@
-<h2>Edit Appointment</h2>
+<div class="container">
+  <h2>Edit Appointment</h2>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
-  <div class="form-group">
-    <label>Patient Name</label>
-    <input formControlName="patientName" class="form-control" />
-  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="form">
+    <div class="form-group">
+      <label>Patient Name</label>
+      <input formControlName="patientName" class="form-control" />
+      @if (f['patientName'].touched && f['patientName'].invalid) {
+        <div class="text-danger">Patient Name is required.</div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Animal Type</label>
-    <input formControlName="animalType" class="form-control" />
-  </div>
+    <div class="form-group">
+      <label>Animal Type</label>
+      <select formControlName="animalType" class="form-control">
+        <option value="" disabled>Select Animal Type</option>
+        <option value="Dog">Dog</option>
+        <option value="Cat">Cat</option>
+        <option value="Rabbit">Rabbit</option>
+        <option value="Bird">Bird</option>
+        <option value="Reptile">Reptile</option>
+      </select>
+      @if (f['animalType'].touched && f['animalType'].invalid) {
+        <div class="text-danger">Animal Type is required.</div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Owner Name</label>
-    <input formControlName="ownerName" class="form-control" />
-  </div>
+    <div class="form-group">
+      <label>Owner Name</label>
+      <input formControlName="ownerName" class="form-control" />
+      @if (f['ownerName'].touched && f['ownerName'].invalid) {
+        <div class="text-danger">Owner Name is required.</div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Owner Surname</label>
-    <input formControlName="ownerSurname" class="form-control" />
-  </div>
+    <div class="form-group">
+      <label>Owner Surname</label>
+      <input formControlName="ownerSurname" class="form-control" />
+      @if (f['ownerSurname'].touched && f['ownerSurname'].invalid) {
+        <div class="text-danger">Owner Surname is required.</div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Owner Contact Number</label>
-    <input formControlName="ownerContactNumber" class="form-control" />
-  </div>
+    <div class="form-group">
+      <label>Owner Contact Number</label>
+      <input formControlName="ownerContactNumber" class="form-control" />
+      @if (f['ownerContactNumber'].touched && f['ownerContactNumber'].invalid) {
+        <div class="text-danger">
+          Contact number must be numeric and at least 8 characters long.
+        </div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Owner ID Card Number</label>
-    <input formControlName="ownerIdCardNumber" class="form-control" />
-  </div>
+    <div class="form-group">
+      <label>Owner ID Card Number</label>
+      <input formControlName="ownerIdCardNumber" class="form-control" />
+      @if (f['ownerIdCardNumber'].touched && f['ownerIdCardNumber'].invalid) {
+        <div class="text-danger">
+          Must be a number ending with a letter (e.g. 1234A).
+        </div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Appointment Date</label>
-    <input formControlName="appointmentDate" class="form-control" />
-  </div>
+    <div class="form-group">
+      <label>Appointment Date</label>
+      <input type="date" formControlName="appointmentDate" class="form-control" />
+      @if (f['appointmentDate'].touched && f['appointmentDate'].invalid) {
+        <div class="text-danger">Date is required.</div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Appointment Time</label>
-    <input formControlName="appointmentTime" class="form-control" />
-  </div>
+    <div class="form-group">
+      <label>Appointment Time</label>
+      <input type="time" formControlName="appointmentTime" class="form-control" />
+      @if (f['appointmentTime'].touched && f['appointmentTime'].invalid) {
+        <div class="text-danger">Time is required.</div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Appointment Duration (minutes)</label>
-    <input formControlName="appointmentDuration" type="number" class="form-control" />
-  </div>
+    @if (form.errors?.['pastDateTime'] &&
+          (f['appointmentDate'].touched || f['appointmentTime'].touched)) {
+      <div class="text-danger">
+        Appointment date and time cannot be in the past.
+      </div>
+    }
 
-  <div class="form-group">
-    <label>Reason for Appointment</label>
-    <textarea formControlName="reasonForAppointment" class="form-control"></textarea>
-  </div>
+    <div class="form-group">
+      <label>Appointment Duration (minutes)</label>
+      <select formControlName="appointmentDuration" class="form-control">
+        <option value="" disabled>Select Duration</option>
+        <option value="10">10 mins</option>
+        <option value="15">15 mins</option>
+        <option value="30">30 mins</option>
+      </select>
+      @if (f['appointmentDuration'].touched && f['appointmentDuration'].invalid) {
+        <div class="text-danger">Duration is required.</div>
+      }
+    </div>
 
-  <div class="form-group">
-    <label>Vet Notes</label>
-    <textarea formControlName="vetNotes" class="form-control"></textarea>
-  </div>
+    <div class="form-group">
+      <label>Reason for Appointment</label>
+      <textarea formControlName="reasonForAppointment" class="form-control"></textarea>
+      @if (f['reasonForAppointment'].touched && f['reasonForAppointment'].invalid) {
+        <div class="text-danger">Reason is required.</div>
+      }
+    </div>
 
-  <button class="btn btn-success" type="submit" [disabled]="form.invalid">Update Appointment</button>
-</form>
+    <div class="form-group">
+      <label>Vet Notes</label>
+      <textarea formControlName="vetNotes" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success" type="submit" [disabled]="form.invalid">Update Appointment</button>
+  </form>
+</div>

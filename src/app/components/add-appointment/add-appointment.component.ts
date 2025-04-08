@@ -5,6 +5,7 @@ import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../dto/appointment.dto';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms'; // <-- ReactiveFormsModule import
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-appointment',
@@ -57,15 +58,33 @@ export class AddAppointmentComponent implements OnInit {
 
       this.appointmentService.createAppointment(newAppointment).subscribe(
         (response) => {
-          console.log('Appointment added successfully!', response);
-          // Navigate back to the list of appointments or another page
-          this.router.navigate(['/list-appointments']);
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Appointment added successfully!',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            // Navigate back to the list of appointments or another page
+            this.router.navigate(['/list-appointments']);
+          });
         },
         (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to add the appointment. Please try again.',
+            confirmButtonText: 'OK'
+          });
           console.error('Error adding appointment:', error);
         }
       );
     } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Form',
+        text: 'Please fill out the form correctly before submitting.',
+        confirmButtonText: 'OK'
+      });
       console.error('Form is not valid');
     }
   }

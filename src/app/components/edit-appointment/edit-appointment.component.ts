@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../dto/appointment.dto';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -31,28 +32,67 @@ export class EditAppointmentComponent implements OnInit {
 
   loadAppointment(): void {
     this.appointmentService.getAppointmentById(this.appointmentId).subscribe((appointment: Appointment) => {
+      // Convert date from dd/mm/yyyy to yyyy-mm-dd (if needed)
+      const parts = appointment.appointmentDate.split('/');
+      const formattedDate = parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : appointment.appointmentDate;
+
       this.form = this.fb.group({
+        patientName: [appointment.patientName, Validators.required],
         animalType: [appointment.animalType, Validators.required],
-        appointmentDate: [appointment.appointmentDate, Validators.required],
-        appointmentDuration: [appointment.appointmentDuration, [Validators.required, Validators.min(1)]],
-        appointmentTime: [appointment.appointmentTime, Validators.required],
-        ownerContactNumber: [appointment.ownerContactNumber, Validators.required],
-        ownerIdCardNumber: [appointment.ownerIdCardNumber, Validators.required],
         ownerName: [appointment.ownerName, Validators.required],
         ownerSurname: [appointment.ownerSurname, Validators.required],
-        patientName: [appointment.patientName, Validators.required],
+        ownerContactNumber: [
+          appointment.ownerContactNumber,
+          [Validators.required, Validators.minLength(8), Validators.pattern(/^\d+$/)]
+        ],
+        ownerIdCardNumber: [
+          appointment.ownerIdCardNumber,
+          [Validators.required, Validators.pattern(/^\d+[A-Za-z]$/)]
+        ],
+        appointmentDate: [formattedDate, Validators.required],
+        appointmentTime: [appointment.appointmentTime, Validators.required],
+        appointmentDuration: [appointment.appointmentDuration, [Validators.required, Validators.min(1)]],
         reasonForAppointment: [appointment.reasonForAppointment, Validators.required],
         vetNotes: [appointment.vetNotes || '']
-      });
+      }, { validators: this.dateTimeNotInPastValidator });
     });
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.appointmentService.updateAppointment(this.appointmentId, this.form.value).subscribe(() => {
-        alert('Appointment updated successfully.');
-        this.router.navigate(['/list-appointments']);
+      const updatedAppointment = this.form.value;
+
+      // Reformat date from yyyy-mm-dd to dd/mm/yyyy
+      const [year, month, day] = updatedAppointment.appointmentDate.split('-');
+      updatedAppointment.appointmentDate = `${day}/${month}/${year}`;
+
+      this.appointmentService.updateAppointment(this.appointmentId, updatedAppointment).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Appointment updated successfully.',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.router.navigate(['/list-appointments']);
+        });
       });
     }
+  }
+
+  // Custom Validator for combined date + time check
+  dateTimeNotInPastValidator(group: FormGroup): { [key: string]: any } | null {
+    const date = group.get('appointmentDate')?.value;
+    const time = group.get('appointmentTime')?.value;
+
+    if (!date || !time) return null;
+
+    const now = new Date();
+    const selectedDateTime = new Date(`${date}T${time}`);
+
+    return selectedDateTime < now ? { pastDateTime: true } : null;
+  }
+
+  get f() {
+    return this.form.controls;
   }
 }
