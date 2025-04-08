@@ -126,11 +126,17 @@
           </div>
         </div>
 
-        <div class="d-flex justify-content-end mt-4">
+        
+        <div class="d-flex justify-content-between mt-4">
+          <button class="btn btn-secondary px-4 py-2" type="button" (click)="goBack()">
+            <i class="fas fa-arrow-left me-2"></i> Back
+          </button>
           <button class="btn btn-warning px-4 py-2" type="submit" [disabled]="form.invalid">
             <i class="fas fa-save me-2"></i> Update Appointment
           </button>
         </div>
+
+      
       </form>
     </div>
   </div>

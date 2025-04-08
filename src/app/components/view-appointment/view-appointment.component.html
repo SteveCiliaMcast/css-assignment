@@ -1,83 +1,82 @@
-<h2 class="text-center my-4 text-black">Appointment Details</h2>
-
-@if (loading) {
-<div class="text-center">
-  <div class="spinner-border text-light" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
-}
-
-@if (error) {
-<div class="alert alert-danger text-center">
-  {{ error }}
-</div>
-}
-
-@if (appointment && !loading) {
-<div class="container">
-  <div class="card shadow border-dark mb-4 bg-dark text-white">
-    <div class="card-header bg-secondary text-white fw-bold text-center">
-      Appointment Information
+<div class="container mt-5">
+  <div class="card bg-dark text-white shadow-lg">
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">
+        <i class="fas fa-eye me-2"></i> View Appointment
+      </h3>
     </div>
-    <div class="card-body p-0">
-      <table class="table table-bordered m-0 text-white">
-        <tbody>
-          <tr>
-            <th scope="row" class="bg-secondary w-50">Appointment ID</th>
-            <td>{{ appointment.appointmentId }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Patient Name</th>
-            <td>{{ appointment.patientName }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Animal Type</th>
-            <td>{{ appointment.animalType }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Owner ID Card Number</th>
-            <td>{{ appointment.ownerIdCardNumber }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Owner Name</th>
-            <td>{{ appointment.ownerName }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Owner Surname</th>
-            <td>{{ appointment.ownerSurname }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Owner Contact Number</th>
-            <td>{{ appointment.ownerContactNumber }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Appointment Date</th>
-            <td>{{ appointment.appointmentDate }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Appointment Time</th>
-            <td>{{ appointment.appointmentTime }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Appointment Duration</th>
-            <td>{{ appointment.appointmentDuration }} minutes</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Reason for Appointment</th>
-            <td>{{ appointment.reasonForAppointment }}</td>
-          </tr>
-          <tr>
-            <th scope="row" class="bg-secondary">Vet Notes</th>
-            <td>{{ appointment.vetNotes || 'None' }}</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div class="card-body bg-dark-subtle text-dark">
+      <form>
+        <div class="row g-3">
+          <!-- Patient Name -->
+          <div class="col-md-6">
+            <label class="form-label">Patient Name</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.patientName" disabled />
+          </div>
+
+          <!-- Animal Type -->
+          <div class="col-md-6">
+            <label class="form-label">Animal Type</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.animalType" disabled />
+          </div>
+
+          <!-- Owner Name -->
+          <div class="col-md-6">
+            <label class="form-label">Owner Name</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.ownerName" disabled />
+          </div>
+
+          <!-- Owner Surname -->
+          <div class="col-md-6">
+            <label class="form-label">Owner Surname</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.ownerSurname" disabled />
+          </div>
+
+          <!-- Owner Contact Number -->
+          <div class="col-md-6">
+            <label class="form-label">Owner Contact Number</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.ownerContactNumber" disabled />
+          </div>
+
+          <!-- Appointment Date -->
+          <div class="col-md-6">
+            <label class="form-label">Appointment Date</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.appointmentDate" disabled />
+          </div>
+
+          <!-- Appointment Time -->
+          <div class="col-md-6">
+            <label class="form-label">Appointment Time</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.appointmentTime" disabled />
+          </div>
+
+          <!-- Appointment Duration -->
+          <div class="col-md-6">
+            <label class="form-label">Appointment Duration</label>
+            <input class="form-control bg-secondary-subtle" [value]="appointment.appointmentDuration + ' minutes'" disabled />
+          </div>
+
+          <!-- Reason for Appointment -->
+          <div class="col-12">
+            <label class="form-label">Reason for Appointment</label>
+            <textarea class="form-control bg-secondary-subtle" [value]="appointment.reasonForAppointment" disabled></textarea>
+          </div>
+
+          <!-- Vet Notes -->
+          <div class="col-12">
+            <label class="form-label">Vet Notes</label>
+            <textarea class="form-control bg-secondary-subtle" [value]="appointment.vetNotes || 'None'" disabled></textarea>
+          </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="d-flex justify-content-between mt-4">
+          <button class="btn btn-secondary px-4 py-2" type="button" (click)="goBack()">
+            <i class="fas fa-arrow-left me-2"></i> Back
+          </button>
+        </div>
+      </form>
     </div>
   </div>
-</div>
-}
-
-<div class="text-center">
-  <button class="btn btn-dark" (click)="goBack()">Back to Appointments</button>
 </div>

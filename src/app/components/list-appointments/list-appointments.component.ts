@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../dto/appointment.dto';
 import * as ExcelJS from 'exceljs';
-import * as FileSaver from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AppointmentStatusPipe } from "../../pipes/appointment-status.pipe";

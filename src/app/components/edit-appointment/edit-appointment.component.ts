@@ -95,4 +95,8 @@ export class EditAppointmentComponent implements OnInit {
   get f() {
     return this.form.controls;
   }
+
+  goBack(): void {
+    this.router.navigate(['/list-appointments']); // Navigate back to the list of appointments
+  }
 }

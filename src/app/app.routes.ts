@@ -5,16 +5,16 @@ import { AddAppointmentComponent } from './components/add-appointment/add-appoin
 import { EditAppointmentComponent } from './components/edit-appointment/edit-appointment.component';
 import { ViewAppointmentComponent } from './components/view-appointment/view-appointment.component';
 import { ListAppointmentsComponent } from './components/list-appointments/list-appointments.component';
+import { AuthGuard } from './guards/auth.guard'; // <-- Import the AuthGuard
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'add-appointment', component: AddAppointmentComponent },
-  { path: 'edit-appointment/:id', component: EditAppointmentComponent },
-  { path: 'view-appointment/:id', component: ViewAppointmentComponent }, // <-- fixed
-  { path: 'list-appointments', component: ListAppointmentsComponent },
+  { path: 'add-appointment', component: AddAppointmentComponent, canActivate: [AuthGuard] }, 
+  { path: 'edit-appointment/:id', component: EditAppointmentComponent, canActivate: [AuthGuard] }, 
+  { path: 'view-appointment/:id', component: ViewAppointmentComponent, canActivate: [AuthGuard] }, 
+  { path: 'list-appointments', component: ListAppointmentsComponent, canActivate: [AuthGuard] }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
