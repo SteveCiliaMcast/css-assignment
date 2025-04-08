@@ -1,1 +1,130 @@
-<p>add-appointment works!</p>
+<div class="container">
+    <h2>Add Appointment</h2>
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+      <!-- Patient Name -->
+      <div class="form-group">
+        <label for="patientName">Patient Name</label>
+        <input id="patientName" formControlName="patientName" class="form-control" required />
+        @if (appointmentForm.get('patientName')?.touched && appointmentForm.get('patientName')?.invalid) {
+          <div class="text-danger">
+            Patient Name is required.
+          </div>
+        }
+      </div>
+  
+      <!-- Animal Type -->
+      <div class="form-group">
+        <label for="animalType">Animal Type</label>
+        <input id="animalType" formControlName="animalType" class="form-control" required />
+        @if (appointmentForm.get('animalType')?.touched && appointmentForm.get('animalType')?.invalid) {
+          <div class="text-danger">
+            Animal Type is required.
+          </div>
+        }
+      </div>
+  
+      <!-- Owner ID Card Number -->
+      <div class="form-group">
+        <label for="ownerIdCardNumber">Owner ID Card Number</label>
+        <input id="ownerIdCardNumber" formControlName="ownerIdCardNumber" class="form-control" required />
+        @if (appointmentForm.get('ownerIdCardNumber')?.touched && appointmentForm.get('ownerIdCardNumber')?.invalid) {
+          <div class="text-danger">
+            Owner ID Card Number must be a numeric string ending with an alphabetical character (e.g., 1234A).
+          </div>
+        }
+      </div>
+  
+      <!-- Owner Name -->
+      <div class="form-group">
+        <label for="ownerName">Owner Name</label>
+        <input id="ownerName" formControlName="ownerName" class="form-control" required />
+        @if (appointmentForm.get('ownerName')?.touched && appointmentForm.get('ownerName')?.invalid) {
+          <div class="text-danger">
+            Owner Name is required.
+          </div>
+        }
+      </div>
+  
+      <!-- Owner Surname -->
+      <div class="form-group">
+        <label for="ownerSurname">Owner Surname</label>
+        <input id="ownerSurname" formControlName="ownerSurname" class="form-control" required />
+        @if (appointmentForm.get('ownerSurname')?.touched && appointmentForm.get('ownerSurname')?.invalid) {
+          <div class="text-danger">
+            Owner Surname is required.
+          </div>
+        }
+      </div>
+  
+      <!-- Owner Contact Number -->
+      <div class="form-group">
+        <label for="ownerContactNumber">Owner Contact Number</label>
+        <input id="ownerContactNumber" formControlName="ownerContactNumber" class="form-control" required />
+        @if (appointmentForm.get('ownerContactNumber')?.touched && appointmentForm.get('ownerContactNumber')?.invalid) {
+          <div class="text-danger">
+            Contact Number must be numeric, non-negative, and at least 8 characters long.
+          </div>
+        }
+      </div>
+  
+      <!-- Appointment Date -->
+      <div class="form-group">
+        <label for="appointmentDate">Appointment Date</label>
+        <input id="appointmentDate" type="date" formControlName="appointmentDate" class="form-control" required />
+        @if (appointmentForm.get('appointmentDate')?.touched && appointmentForm.get('appointmentDate')?.invalid) {
+          <div class="text-danger">
+            Appointment Date cannot be in the past.
+          </div>
+        }
+      </div>
+  
+      <!-- Appointment Time -->
+      <div class="form-group">
+        <label for="appointmentTime">Appointment Time</label>
+        <input id="appointmentTime" type="time" formControlName="appointmentTime" class="form-control" required />
+        @if (appointmentForm.get('appointmentTime')?.touched && appointmentForm.get('appointmentTime')?.invalid) {
+          <div class="text-danger">
+            Appointment Time cannot be in the past.
+          </div>
+        }
+      </div>
+
+  
+      <!-- Appointment Duration -->
+      <div class="form-group">
+        <label for="appointmentDuration">Appointment Duration (minutes)</label>
+        <input id="appointmentDuration" type="number" formControlName="appointmentDuration" class="form-control" required />
+        @if (appointmentForm.get('appointmentDuration')?.touched && appointmentForm.get('appointmentDuration')?.invalid) {
+          <div class="text-danger">
+            Appointment Duration is required and must be a valid number.
+          </div>
+        }
+      </div>
+  
+      <!-- Reason for Appointment -->
+      <div class="form-group">
+        <label for="reasonForAppointment">Reason for Appointment</label>
+        <textarea id="reasonForAppointment" formControlName="reasonForAppointment" class="form-control" required></textarea>
+        @if (appointmentForm.get('reasonForAppointment')?.touched && appointmentForm.get('reasonForAppointment')?.invalid) {
+          <div class="text-danger">
+            Reason for Appointment is required.
+          </div>
+        }
+      </div>
+  
+      <!-- Vet Notes -->
+      <div class="form-group">
+        <label for="vetNotes">Vet Notes</label>
+        <textarea id="vetNotes" formControlName="vetNotes" class="form-control"></textarea>
+        @if (appointmentForm.get('vetNotes')?.touched && appointmentForm.get('vetNotes')?.invalid) {
+          <div class="text-danger">
+            Vet Notes is required.
+          </div>
+        }
+      </div>
+  
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary" [disabled]="appointmentForm.invalid">Add Appointment</button>
+    </form>
+  </div>
+  

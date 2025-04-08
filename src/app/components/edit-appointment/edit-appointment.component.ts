@@ -51,7 +51,7 @@ export class EditAppointmentComponent implements OnInit {
     if (this.form.valid) {
       this.appointmentService.updateAppointment(this.appointmentId, this.form.value).subscribe(() => {
         alert('Appointment updated successfully.');
-        this.router.navigate(['/view-appointment']);
+        this.router.navigate(['/list-appointments']);
       });
     }
   }
