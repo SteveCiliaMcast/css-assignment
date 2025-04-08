@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppointmentService } from '../../services/appointment.service';
 import { CommonModule } from '@angular/common';
 import { Appointment } from '../../dto/appointment.dto';
@@ -19,13 +19,15 @@ export class ViewAppointmentComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.appointmentId = +this.route.snapshot.paramMap.get('id')!;
     this.loadAppointment();
   }
+  
 
   loadAppointment(): void {
     this.appointmentService.getAppointmentById(this.appointmentId).subscribe({
@@ -39,5 +41,8 @@ export class ViewAppointmentComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+  goBack(): void {
+    this.router.navigate(['/list-appointments']); // Navigate back to the list of appointments
   }
 }

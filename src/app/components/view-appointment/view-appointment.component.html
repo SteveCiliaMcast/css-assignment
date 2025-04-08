@@ -1,21 +1,83 @@
-<h2>Appointment Details</h2>
+<h2 class="text-center my-4 text-black">Appointment Details</h2>
 
-<div *ngIf="loading">Loading...</div>
-<div *ngIf="error">{{ error }}</div>
+@if (loading) {
+<div class="text-center">
+  <div class="spinner-border text-light" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+}
 
-<div *ngIf="appointment && !loading">
-  <table class="table table-bordered">
-    <tr><th>Appointment ID</th><td>{{ appointment.appointmentId }}</td></tr>
-    <tr><th>Patient Name</th><td>{{ appointment.patientName }}</td></tr>
-    <tr><th>Animal Type</th><td>{{ appointment.animalType }}</td></tr>
-    <tr><th>Owner ID Card Number</th><td>{{ appointment.ownerIdCardNumber }}</td></tr>
-    <tr><th>Owner Name</th><td>{{ appointment.ownerName }}</td></tr>
-    <tr><th>Owner Surname</th><td>{{ appointment.ownerSurname }}</td></tr>
-    <tr><th>Owner Contact Number</th><td>{{ appointment.ownerContactNumber }}</td></tr>
-    <tr><th>Appointment Date</th><td>{{ appointment.appointmentDate }}</td></tr>
-    <tr><th>Appointment Time</th><td>{{ appointment.appointmentTime }}</td></tr>
-    <tr><th>Appointment Duration</th><td>{{ appointment.appointmentDuration }} minutes</td></tr>
-    <tr><th>Reason for Appointment</th><td>{{ appointment.reasonForAppointment }}</td></tr>
-    <tr><th>Vet Notes</th><td>{{ appointment.vetNotes || 'None' }}</td></tr>
-  </table>
+@if (error) {
+<div class="alert alert-danger text-center">
+  {{ error }}
+</div>
+}
+
+@if (appointment && !loading) {
+<div class="container">
+  <div class="card shadow border-dark mb-4 bg-dark text-white">
+    <div class="card-header bg-secondary text-white fw-bold text-center">
+      Appointment Information
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-bordered m-0 text-white">
+        <tbody>
+          <tr>
+            <th scope="row" class="bg-secondary w-50">Appointment ID</th>
+            <td>{{ appointment.appointmentId }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Patient Name</th>
+            <td>{{ appointment.patientName }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Animal Type</th>
+            <td>{{ appointment.animalType }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Owner ID Card Number</th>
+            <td>{{ appointment.ownerIdCardNumber }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Owner Name</th>
+            <td>{{ appointment.ownerName }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Owner Surname</th>
+            <td>{{ appointment.ownerSurname }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Owner Contact Number</th>
+            <td>{{ appointment.ownerContactNumber }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Appointment Date</th>
+            <td>{{ appointment.appointmentDate }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Appointment Time</th>
+            <td>{{ appointment.appointmentTime }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Appointment Duration</th>
+            <td>{{ appointment.appointmentDuration }} minutes</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Reason for Appointment</th>
+            <td>{{ appointment.reasonForAppointment }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bg-secondary">Vet Notes</th>
+            <td>{{ appointment.vetNotes || 'None' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+}
+
+<div class="text-center">
+  <button class="btn btn-dark" (click)="goBack()">Back to Appointments</button>
 </div>

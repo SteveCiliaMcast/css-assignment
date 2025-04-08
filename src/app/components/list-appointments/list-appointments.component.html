@@ -1,9 +1,10 @@
 <div class="mb-3">
-    <button class="btn btn-success me-2" (click)="exportToExcel()">Export to Excel</button>
-    <button class="btn btn-danger" (click)="exportToPDF()">Export to PDF</button>
-  </div>
-  
-  <table class="table table-striped" *ngIf="appointments.length > 0; else noAppointments">
+  <button class="btn btn-success me-2" (click)="exportToExcel()">Export to Excel</button>
+  <button class="btn btn-danger" (click)="exportToPDF()">Export to PDF</button>
+</div>
+
+@if (appointments.length > 0) {
+  <table class="table table-striped">
     <thead>
       <tr>
         <th>ID</th>
@@ -18,25 +19,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let appt of appointments">
-        <td>{{ appt.appointmentId }}</td>
-        <td>{{ appt.patientName }}</td>
-        <td>{{ appt.animalType }}</td>
-        <td>{{ appt.ownerName }} </td>
-        <td>{{ appt.ownerSurname }}</td>
-        <td>{{ appt.appointmentDate }} {{ appt.appointmentTime }}</td>
-        <td>{{ appt.appointmentDuration }}</td>
-        <td>{{ appt.appointmentDate | appointmentStatus:appt.appointmentTime }}</td> <!-- ✅ pipe -->
-        <td>
-          <button class="btn btn-primary btn-sm" (click)="viewAppointment(appt.appointmentId)">View</button>
-          <button class="btn btn-warning btn-sm" (click)="updateAppointment(appt.appointmentId)">Update</button>
-          <button class="btn btn-danger btn-sm" (click)="deleteAppointment(appt.appointmentId)">Delete</button>
-        </td>
-      </tr>
+      @for (appt of appointments; track appt.appointmentId) {
+        <tr>
+          <td>{{ appt.appointmentId }}</td>
+          <td>{{ appt.patientName }}</td>
+          <td>{{ appt.animalType }}</td>
+          <td>{{ appt.ownerName }}</td>
+          <td>{{ appt.ownerSurname }}</td>
+          <td>{{ appt.appointmentDate }} {{ appt.appointmentTime }}</td>
+          <td>{{ appt.appointmentDuration }}</td>
+          <td>{{ appt.appointmentDate | appointmentStatus:appt.appointmentTime }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" (click)="viewAppointment(appt.appointmentId)">View</button>
+            <button class="btn btn-warning btn-sm" (click)="updateAppointment(appt.appointmentId)">Update</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteAppointment(appt.appointmentId)">Delete</button>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
-  
-  <ng-template #noAppointments>
-    <p>No appointments found.</p>
-  </ng-template>
-  
+} @else {
+  <p>No appointments found.</p>
+}
