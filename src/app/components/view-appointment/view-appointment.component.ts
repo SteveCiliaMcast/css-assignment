@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AppointmentService } from '../../services/appointment.service';
+import { CommonModule } from '@angular/common';
 import { Appointment } from '../../dto/appointment.dto';
 
 @Component({
@@ -12,48 +12,32 @@ import { Appointment } from '../../dto/appointment.dto';
   styleUrl: './view-appointment.component.css'
 })
 export class ViewAppointmentComponent implements OnInit {
-  appointments: Appointment[] = [];
+  appointment!: Appointment;
+  appointmentId!: number;
+  loading = true;
+  error = '';
 
   constructor(
-    private appointmentService: AppointmentService,
-    private router: Router
+    private route: ActivatedRoute,
+    private appointmentService: AppointmentService
   ) {}
 
   ngOnInit(): void {
-    this.appointmentService.getAppointments().subscribe(
-      (data: Appointment[]) => {
-        this.appointments = data;
+    this.appointmentId = +this.route.snapshot.paramMap.get('id')!;
+    this.loadAppointment();
+  }
+
+  loadAppointment(): void {
+    this.appointmentService.getAppointmentById(this.appointmentId).subscribe({
+      next: (data) => {
+        this.appointment = data;
+        this.loading = false;
       },
-      (error) => {
-        console.error('Error fetching appointments:', error);
+      error: (err) => {
+        this.error = 'Error loading appointment.';
+        this.loading = false;
+        console.error(err);
       }
-    );
-  }
-  
-
-  // Navigate to view appointment details
-  viewAppointment(appointmentId: number): void {
-    this.router.navigate(['/view-appointment', appointmentId]);
-  }
-
-  // Navigate to update appointment form
-  updateAppointment(appointmentId: number): void {
-    this.router.navigate(['/edit-appointment', appointmentId]);
-  }
-
-  // Delete an appointment
-  deleteAppointment(appointmentId: number): void {
-    if (confirm('Are you sure you want to delete this appointment?')) {
-      this.appointmentService.deleteAppointment(appointmentId.toString()).subscribe(
-        () => {
-          console.log(`Appointment with ID ${appointmentId} deleted successfully.`);
-          // Refresh the appointments list after deletion
-          this.appointments = this.appointments.filter(appt => appt.appointmentId !== appointmentId);
-        },
-        (error) => {
-          console.error('Error deleting appointment:', error);
-        }
-      );
-    }
+    });
   }
 }

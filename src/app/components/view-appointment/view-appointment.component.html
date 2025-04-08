@@ -1,42 +1,21 @@
-<h2>Appointments</h2>
+<h2>Appointment Details</h2>
 
-<table class="table table-striped" *ngIf="appointments.length > 0; else noAppointments">
-  <thead>
-    <tr>
-      <th>Appointment ID</th>
-      <th>Owner Name</th>
-      <th>Owner Surname</th>
-      <th>Contact Number</th>
-      <th>Animal Type</th>
-      <th>Patient Name</th>
-      <th>Appointment Date</th>
-      <th>Appointment Time</th>
-      <th>Reason</th>
-      <th>Vet Notes</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let appt of appointments">
-      <td>{{ appt.appointmentId }}</td>
-      <td>{{ appt.ownerName }}</td>
-      <td>{{ appt.ownerSurname }}</td>
-      <td>{{ appt.ownerContactNumber }}</td>
-      <td>{{ appt.animalType }}</td>
-      <td>{{ appt.patientName }}</td>
-      <td>{{ appt.appointmentDate }}</td>
-      <td>{{ appt.appointmentTime }}</td>
-      <td>{{ appt.reasonForAppointment }}</td>
-      <td>{{ appt.vetNotes }}</td>
-      <td>
-        <button class="btn btn-primary btn-sm" (click)="viewAppointment(appt.appointmentId)">View</button>
-        <button class="btn btn-warning btn-sm" (click)="updateAppointment(appt.appointmentId)">Update</button>
-        <button class="btn btn-danger btn-sm" (click)="deleteAppointment(appt.appointmentId)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
 
-<ng-template #noAppointments>
-  <p>No appointments found.</p>
-</ng-template>
+<div *ngIf="appointment && !loading">
+  <table class="table table-bordered">
+    <tr><th>Appointment ID</th><td>{{ appointment.appointmentId }}</td></tr>
+    <tr><th>Patient Name</th><td>{{ appointment.patientName }}</td></tr>
+    <tr><th>Animal Type</th><td>{{ appointment.animalType }}</td></tr>
+    <tr><th>Owner ID Card Number</th><td>{{ appointment.ownerIdCardNumber }}</td></tr>
+    <tr><th>Owner Name</th><td>{{ appointment.ownerName }}</td></tr>
+    <tr><th>Owner Surname</th><td>{{ appointment.ownerSurname }}</td></tr>
+    <tr><th>Owner Contact Number</th><td>{{ appointment.ownerContactNumber }}</td></tr>
+    <tr><th>Appointment Date</th><td>{{ appointment.appointmentDate }}</td></tr>
+    <tr><th>Appointment Time</th><td>{{ appointment.appointmentTime }}</td></tr>
+    <tr><th>Appointment Duration</th><td>{{ appointment.appointmentDuration }} minutes</td></tr>
+    <tr><th>Reason for Appointment</th><td>{{ appointment.reasonForAppointment }}</td></tr>
+    <tr><th>Vet Notes</th><td>{{ appointment.vetNotes || 'None' }}</td></tr>
+  </table>
+</div>
