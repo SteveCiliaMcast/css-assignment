@@ -7,13 +7,12 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Patient</th>
-        <th>Animal</th>
-        <th>Owner</th>
-        <th>Contact</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Reason</th>
+        <th>Patient Name</th>
+        <th>Animal Type</th>
+        <th>Owner Name</th>
+        <th>Owner Surname</th>
+        <th>Date & Time</th>
+        <th>Duration</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
@@ -23,11 +22,10 @@
         <td>{{ appt.appointmentId }}</td>
         <td>{{ appt.patientName }}</td>
         <td>{{ appt.animalType }}</td>
-        <td>{{ appt.ownerName }} {{ appt.ownerSurname }}</td>
-        <td>{{ appt.ownerContactNumber }}</td>
-        <td>{{ appt.appointmentDate }}</td>
-        <td>{{ appt.appointmentTime }}</td>
-        <td>{{ appt.reasonForAppointment }}</td>
+        <td>{{ appt.ownerName }} </td>
+        <td>{{ appt.ownerSurname }}</td>
+        <td>{{ appt.appointmentDate }} {{ appt.appointmentTime }}</td>
+        <td>{{ appt.appointmentDuration }}</td>
         <td>{{ appt.appointmentDate | appointmentStatus:appt.appointmentTime }}</td> <!-- ✅ pipe -->
         <td>
           <button class="btn btn-primary btn-sm" (click)="viewAppointment(appt.appointmentId)">View</button>

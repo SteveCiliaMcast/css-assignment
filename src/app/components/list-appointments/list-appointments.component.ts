@@ -89,49 +89,43 @@ export class ListAppointmentsComponent implements OnInit {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Appointments');
 
+    // Define the columns
     worksheet.columns = [
       { header: 'ID', key: 'id', width: 10 },
-      { header: 'Patient', key: 'patient', width: 20 },
-      { header: 'Animal', key: 'animal', width: 15 },
-      { header: 'Owner', key: 'owner', width: 25 },
-      { header: 'Contact', key: 'contact', width: 20 },
-      { header: 'Date', key: 'date', width: 15 },
-      { header: 'Time', key: 'time', width: 10 },
-      { header: 'Reason', key: 'reason', width: 30 },
+      { header: 'Patient Name', key: 'patientName', width: 20 },
+      { header: 'Animal Type', key: 'animalType', width: 15 },
+      { header: 'Owner Name', key: 'ownerName', width: 20 },
+      { header: 'Owner Surname', key: 'ownerSurname', width: 20 },
+      { header: 'Date & Time', key: 'dateTime', width: 25 },
+      { header: 'Duration', key: 'duration', width: 10 },
       { header: 'Status', key: 'status', width: 12 }
     ];
 
+    // Add rows
     this.appointments.forEach(appt => {
       const status = this.getStatus(appt.appointmentDate, appt.appointmentTime);
-      const row = worksheet.addRow({
+      const dateTime = `${appt.appointmentDate} ${appt.appointmentTime}`;
+      worksheet.addRow({
         id: appt.appointmentId,
-        patient: appt.patientName,
-        animal: appt.animalType,
-        owner: `${appt.ownerName} ${appt.ownerSurname}`,
-        contact: appt.ownerContactNumber,
-        date: appt.appointmentDate,
-        time: appt.appointmentTime,
-        reason: appt.reasonForAppointment,
+        patientName: appt.patientName,
+        animalType: appt.animalType,
+        ownerName: appt.ownerName,
+        ownerSurname: appt.ownerSurname,
+        dateTime: dateTime,
+        duration: `${appt.appointmentDuration} mins`,
         status: status
       });
-
-      if (status === 'Upcoming') {
-        row.eachCell(cell => {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'C6EFCE' } // Light green
-          };
-        });
-      }
     });
 
-    workbook.xlsx.writeBuffer().then(data => {
-      const blob = new Blob([data], {
-        type:
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      });
-      FileSaver.saveAs(blob, 'Appointments.xlsx');
+    // Save the Excel file
+    workbook.xlsx.writeBuffer().then(buffer => {
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Appointments.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
     });
   }
 
@@ -142,18 +136,17 @@ export class ListAppointmentsComponent implements OnInit {
       appt.appointmentId,
       appt.patientName,
       appt.animalType,
-      `${appt.ownerName} ${appt.ownerSurname}`,
-      appt.ownerContactNumber,
-      appt.appointmentDate,
-      appt.appointmentTime,
-      appt.reasonForAppointment,
+      appt.ownerName,
+      appt.ownerSurname,
+      `${appt.appointmentDate} ${appt.appointmentTime}`,
+      `${appt.appointmentDuration} mins`,
       this.getStatus(appt.appointmentDate, appt.appointmentTime)
     ]);
 
     autoTable(doc, {
       head: [[
-        'ID', 'Patient', 'Animal', 'Owner', 'Contact',
-        'Date', 'Time', 'Reason', 'Status'
+        'ID', 'Patient Name', 'Animal Type', 'Owner Name', 'Owner Surname',
+        'Date & Time', 'Duration', 'Status'
       ]],
       body: tableData,
       didParseCell: (data) => {
