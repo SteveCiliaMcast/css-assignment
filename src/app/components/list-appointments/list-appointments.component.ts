@@ -100,11 +100,11 @@ export class ListAppointmentsComponent implements OnInit {
       { header: 'Status', key: 'status', width: 12 }
     ];
 
-    // Add rows
+    // Add rows with conditional formatting
     this.appointments.forEach(appt => {
       const status = this.getStatus(appt.appointmentDate, appt.appointmentTime);
       const dateTime = `${appt.appointmentDate} ${appt.appointmentTime}`;
-      worksheet.addRow({
+      const row = worksheet.addRow({
         id: appt.appointmentId,
         patientName: appt.patientName,
         animalType: appt.animalType,
@@ -114,6 +114,17 @@ export class ListAppointmentsComponent implements OnInit {
         duration: `${appt.appointmentDuration} mins`,
         status: status
       });
+
+      // Apply green background for upcoming appointments
+      if (status === 'Upcoming') {
+        row.eachCell(cell => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'C6EFCE' } // Light green background
+          };
+        });
+      }
     });
 
     // Save the Excel file
@@ -130,7 +141,7 @@ export class ListAppointmentsComponent implements OnInit {
 
   exportToPDF(): void {
     const doc = new jsPDF();
-
+  
     const tableData = this.appointments.map(appt => [
       appt.appointmentId,
       appt.patientName,
@@ -141,24 +152,34 @@ export class ListAppointmentsComponent implements OnInit {
       `${appt.appointmentDuration} mins`,
       this.getStatus(appt.appointmentDate, appt.appointmentTime)
     ]);
-
+  
     autoTable(doc, {
-      head: [[
-        'ID', 'Patient Name', 'Animal Type', 'Owner Name', 'Owner Surname',
-        'Date & Time', 'Duration', 'Status'
-      ]],
+      head: [
+        [
+          'ID', 'Patient Name', 'Animal Type', 'Owner Name', 'Owner Surname',
+          'Date & Time', 'Duration', 'Status'
+        ]
+      ],
       body: tableData,
+      // Header styles
+      headStyles: {
+        fillColor: [255, 255, 255],  // White background for header
+        textColor: [0, 0, 0],        // Black text for header
+        fontSize: 10,                // Adjust font size if needed
+        fontStyle: 'bold',           // Make header text bold
+      },
       didParseCell: (data) => {
         if (data.row.index !== undefined) {
           const appt = this.appointments[data.row.index];
           const status = this.getStatus(appt.appointmentDate, appt.appointmentTime);
           if (status === 'Upcoming') {
-            data.cell.styles.fillColor = [204, 255, 204]; // Light green
+            data.cell.styles.fillColor = [204, 255, 204]; // Light green for 'Upcoming' status
           }
         }
       }
     });
-
+  
     doc.save('appointments.pdf');
   }
+  
 }
