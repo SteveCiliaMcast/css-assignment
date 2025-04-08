@@ -8,6 +8,7 @@ import * as FileSaver from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AppointmentStatusPipe } from "../../pipes/appointment-status.pipe";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-appointments',
@@ -44,16 +45,37 @@ export class ListAppointmentsComponent implements OnInit {
   }
 
   deleteAppointment(appointmentId: number): void {
-    if (confirm('Are you sure you want to delete this appointment?')) {
-      this.appointmentService.deleteAppointment(appointmentId.toString()).subscribe(
-        () => {
-          this.appointments = this.appointments.filter(appt => appt.appointmentId !== appointmentId);
-        },
-        (error) => {
-          console.error('Error deleting appointment:', error);
-        }
-      );
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this appointment? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.appointmentService.deleteAppointment(appointmentId.toString()).subscribe(
+          () => {
+            this.appointments = this.appointments.filter(appt => appt.appointmentId !== appointmentId);
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The appointment has been deleted successfully.',
+              confirmButtonText: 'OK'
+            });
+          },
+          (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to delete the appointment. Please try again.',
+              confirmButtonText: 'OK'
+            });
+            console.error('Error deleting appointment:', error);
+          }
+        );
+      }
+    });
   }
 
   getStatus(date: string, time: string): string {
