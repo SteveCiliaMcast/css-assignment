@@ -58,9 +58,11 @@
                   <button class="btn btn-sm btn-outline-warning me-1" (click)="updateAppointment(appt.appointmentId)" title="Edit">
                     <i class="fas fa-edit"></i>
                   </button>
+                  @if (authService.isAdmin()) {
                   <button class="btn btn-sm btn-outline-danger" (click)="deleteAppointment(appt.appointmentId)" title="Delete">
                     <i class="fas fa-trash-alt"></i>
                   </button>
+                }
                 </td>
               </tr>
             </tbody>

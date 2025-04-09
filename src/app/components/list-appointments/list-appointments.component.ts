@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AppointmentStatusPipe } from "../../pipes/appointment-status.pipe";
 import Swal from 'sweetalert2';
+import { AuthenticateService } from '../../services/authenticate.service';
 
 @Component({
   selector: 'app-list-appointments',
@@ -21,7 +22,8 @@ export class ListAppointmentsComponent implements OnInit {
 
   constructor(
     private appointmentService: AppointmentService,
-    private router: Router
+    private router: Router,
+    public authService: AuthenticateService // Assuming you have an AuthService for authentication
   ) {}
 
   ngOnInit(): void {

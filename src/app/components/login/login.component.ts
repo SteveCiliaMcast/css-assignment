@@ -38,7 +38,8 @@ export class LoginComponent {
           // Save token and username in localStorage
           localStorage.setItem('jwtToken', token);
           localStorage.setItem('username', username); // Save the username
-  
+          localStorage.setItem('role', response.role); // Save the role
+
           console.log('Login successful, token:', token);
           
           Swal.fire({
