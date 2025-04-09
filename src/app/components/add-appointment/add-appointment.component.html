@@ -120,13 +120,14 @@
         } 
         </div>
         
-
+        @if (!authService.isVet()) {
         <!-- Submit Button -->
         <div class="d-flex justify-content-end mt-4">
           <button type="submit" class="btn btn-success px-4 py-2" [disabled]="appointmentForm.invalid">
             <i class="fas fa-plus-circle me-2"></i> Add Appointment
           </button>
         </div>
+      }
       </form>
     </div>
   </div>
