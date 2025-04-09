@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthenticateService } from '../../services/authenticate.service'; // Import AuthenticateService
 
 @Component({
   selector: 'app-navbar',
@@ -11,9 +12,12 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class NavbarComponent {
   isLoggedIn = false;
+  userName: string | null = null; // Variable to store the user's name
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public authService: AuthenticateService) {
     this.checkLoginStatus();
+    this.userName = authService.getUsername(); // Retrieve the user's name
+    console.log(this.userName);
   }
 
   checkLoginStatus(): void {
@@ -23,6 +27,7 @@ export class NavbarComponent {
   logout(): void {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('role');
     this.isLoggedIn = false;
     this.router.navigate(['/login']);
   }

@@ -119,12 +119,15 @@
             }
           </div>
 
+          @if(isAdminOrVet ){
           <!-- Vet Notes -->
           <div class="col-12">
             <label class="form-label">Vet Notes</label>
             <textarea formControlName="vetNotes" class="form-control bg-secondary-subtle"></textarea>
           </div>
+        }
         </div>
+
 
         
         <div class="d-flex justify-content-between mt-4">

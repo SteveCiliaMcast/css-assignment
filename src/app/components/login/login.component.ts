@@ -33,11 +33,12 @@ export class LoginComponent {
       this.authService.authenticate(loginData).subscribe({
         next: (response: any) => {
           const token = response.jwtToken;
-          const username = loginData.email; // Or extract it from the response if it's provided
+          const username = response.username; // Or extract it from the response if it's provided
   
           // Save token and username in localStorage
           localStorage.setItem('jwtToken', token);
           localStorage.setItem('username', username); // Save the username
+          console.log('Username:', username);
           localStorage.setItem('role', response.role); // Save the role
 
           console.log('Login successful, token:', token);
