@@ -30,6 +30,7 @@ export class ListAppointmentsComponent implements OnInit {
     this.appointmentService.getAppointments().subscribe(
       (data: Appointment[]) => {
         this.appointments = data;
+        
       },
       (error) => {
         console.error('Error fetching appointments:', error);

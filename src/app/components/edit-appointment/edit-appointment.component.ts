@@ -4,37 +4,54 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../dto/appointment.dto';
+import { AuthenticateService } from '../../services/authenticate.service'; // Import AuthenticateService
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-edit-appointment',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './edit-appointment.component.html',
-  styleUrl: './edit-appointment.component.css'
+  styleUrls: ['./edit-appointment.component.css']
 })
 export class EditAppointmentComponent implements OnInit {
   form!: FormGroup;
   appointmentId!: number;
+  isUpcomingAppointment: boolean = false;
+  isAdminOrVet: boolean = false; // Variable to check if user is Admin or Vet
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    public authService: AuthenticateService // Inject AuthenticateService
   ) {}
 
   ngOnInit(): void {
     this.appointmentId = +this.route.snapshot.paramMap.get('id')!;
+    this.checkUserRole()
     this.loadAppointment();
+    ; // Check the user role after loading the appointment
   }
 
   loadAppointment(): void {
     this.appointmentService.getAppointmentById(this.appointmentId).subscribe((appointment: Appointment) => {
-      // Convert date from dd/mm/yyyy to yyyy-mm-dd (if needed)
-      const parts = appointment.appointmentDate.split('/');
-      const formattedDate = parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : appointment.appointmentDate;
+      const appointmentDateParts = appointment.appointmentDate.split('/');
+      const appointmentDate = new Date(`${appointmentDateParts[2]}-${appointmentDateParts[1]}-${appointmentDateParts[0]}`);
+      const currentDate = new Date();
+
+      console.log('is admin or vert', this.isAdminOrVet);
+      if(this.isAdminOrVet){
+        this.isUpcomingAppointment = true;
+      }else{
+        this.isUpcomingAppointment = appointmentDate >= currentDate;
+      }
+      
+      console.log('Is upcoming appointment:', this.isUpcomingAppointment);
+
+      // Convert date for the form
+      const formattedDate = appointment.appointmentDate.split('/').reverse().join('-'); // Convert dd/mm/yyyy to yyyy-mm-dd
 
       this.form = this.fb.group({
         patientName: [appointment.patientName, Validators.required],
@@ -56,6 +73,13 @@ export class EditAppointmentComponent implements OnInit {
         vetNotes: [appointment.vetNotes || '']
       }, { validators: this.dateTimeNotInPastValidator });
     });
+  }
+
+  // Check if the logged-in user is Admin or Vet
+  checkUserRole(): void {
+    const userRole = localStorage.getItem('role'); // Retrieve the role from localStorage
+    console.log('User role:', userRole);
+    this.isAdminOrVet = (userRole === 'ADMIN' || userRole === 'VET');
   }
 
   onSubmit(): void {
