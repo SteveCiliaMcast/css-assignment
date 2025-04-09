@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators ,ReactiveFormsModule } from '@angular/forms';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../dto/appointment.dto';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms'; // <-- ReactiveFormsModule import
 import Swal from 'sweetalert2';
+import { AuthenticateService } from '../../services/authenticate.service';
 
 @Component({
+  standalone: true,
+  imports: [ReactiveFormsModule],
   selector: 'app-add-appointment',
-  standalone: true, // If you are using standalone component
-  imports: [CommonModule, ReactiveFormsModule], // <-- Make sure ReactiveFormsModule is in imports
   templateUrl: './add-appointment.component.html',
   styleUrls: ['./add-appointment.component.css']
 })
@@ -20,7 +19,8 @@ export class AddAppointmentComponent implements OnInit {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    public authService: AuthenticateService
   ) {
     this.appointmentForm = this.fb.group({
       patientName: ['', Validators.required],
@@ -39,11 +39,16 @@ export class AddAppointmentComponent implements OnInit {
       appointmentTime: ['', [Validators.required, this.timeNotInPastValidator]],
       appointmentDuration: ['', [Validators.required, Validators.min(1)]],
       reasonForAppointment: ['', Validators.required],
-      vetNotes: ['', Validators.required]
+      vetNotes: [''] // Default empty value, will be updated based on role
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // If the user is a Receptionist, the vetNotes field will not be required.
+    if (this.authService.isReceptionist()) {
+      this.appointmentForm.get('vetNotes')?.clearValidators();
+    }
+  }
 
   onSubmit(): void {
     if (this.appointmentForm.valid) {

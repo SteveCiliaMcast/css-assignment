@@ -111,12 +111,15 @@
             }
           </div>
 
+          @if (authService.isAdmin() || authService.isVet()) {
           <!-- Vet Notes -->
           <div class="col-12">
             <label for="vetNotes" class="form-label">Vet Notes</label>
             <textarea id="vetNotes" formControlName="vetNotes" class="form-control bg-secondary-subtle"></textarea>
           </div>
+        } 
         </div>
+        
 
         <!-- Submit Button -->
         <div class="d-flex justify-content-end mt-4">
