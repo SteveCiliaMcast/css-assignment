@@ -39,12 +39,11 @@ export class AddAppointmentComponent implements OnInit {
       appointmentTime: ['', [Validators.required, this.timeNotInPastValidator]],
       appointmentDuration: ['', [Validators.required, Validators.min(1)]],
       reasonForAppointment: ['', Validators.required],
-      vetNotes: [''] // Default empty value, will be updated based on role
+      vetNotes: [''] 
     });
   }
 
   ngOnInit(): void {
-    // If the user is a Receptionist, the vetNotes field will not be required.
     if (this.authService.isReceptionist()) {
       this.appointmentForm.get('vetNotes')?.clearValidators();
     }
@@ -69,7 +68,6 @@ export class AddAppointmentComponent implements OnInit {
             text: 'Appointment added successfully!',
             confirmButtonText: 'OK'
           }).then(() => {
-            // Navigate back to the list of appointments or another page
             this.router.navigate(['/list-appointments']);
           });
         },

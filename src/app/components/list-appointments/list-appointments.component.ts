@@ -166,10 +166,10 @@ export class ListAppointmentsComponent implements OnInit {
       body: tableData,
       // Header styles
       headStyles: {
-        fillColor: [255, 255, 255],  // White background for header
-        textColor: [0, 0, 0],        // Black text for header
-        fontSize: 10,                // Adjust font size if needed
-        fontStyle: 'bold',           // Make header text bold
+        fillColor: [255, 255, 255],  // White
+        textColor: [0, 0, 0],        // Black
+        fontSize: 10,                // Adjust
+        fontStyle: 'bold',          
       },
       didParseCell: (data) => {
         if (data.row.index !== undefined) {

@@ -35,11 +35,11 @@ export class LoginComponent {
           const token = response.jwtToken;
           const username = response.username; // Or extract it from the response if it's provided
   
-          // Save token and username in localStorage
+          // Save token and username AND ROLE in localStorage
           localStorage.setItem('jwtToken', token);
-          localStorage.setItem('username', username); // Save the username
+          localStorage.setItem('username', username); 
           console.log('Username:', username);
-          localStorage.setItem('role', response.role); // Save the role
+          localStorage.setItem('role', response.role);
 
           console.log('Login successful, token:', token);
           
@@ -51,7 +51,7 @@ export class LoginComponent {
           }).then(() => {
             this.router.navigate(['/list-appointments']).then(() => {
               setTimeout(() => {
-                window.location.reload(); // ✅ Now reload happens after navigation
+                window.location.reload();
               }, 0);
             });
           });
